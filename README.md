@@ -13,12 +13,12 @@ This bot is dedicated for the laziest streamer in the world. FeelsWeirdMan 👉 
 
 1. Copy `config.json.example` to `config.json`
 2. Create your app in Twitch developer dashboard
-3. Get client id and client secret. [I've made a simple express app for this](https://github.com/daftmaple/twitch-oauth-token). Store it in `config.json` and prefill it in these fields:
+3. Get client id and client secret from your app. Store it in `config.json` and prefill it in these fields:
 
 ```json
 {
-  "clientId": "INITIAL_ACCESS_TOKEN",
-  "clientSecret": "INITIAL_REFRESH_TOKEN"
+  "clientId": "CLIENT_ID",
+  "clientSecret": "CLIENT_SECRET"
 }
 ```
 
@@ -31,6 +31,8 @@ This bot is dedicated for the laziest streamer in the world. FeelsWeirdMan 👉 
   "expiryTimestamp": 0
 }
 ```
+
+Access token and refresh token can be obtained by generating Twitch OAuth token. [I've made a simple express app for this](https://github.com/daftmaple/twitch-oauth-token). This app will also use the same clientId and clientSecret.
 
 5. Add your packages
 6. Build your package.
