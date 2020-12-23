@@ -85,7 +85,7 @@ chatClient.onMessage((channel, user, message, msg) => {
       commands[cmd]({
         client: chatClient,
         channel,
-        args,
+        args: [...args.slice(1)],
         user,
       });
     }
