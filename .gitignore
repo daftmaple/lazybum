@@ -1,0 +1,11 @@
+# Build file
+build/
+
+# Dependencies
+package-lock.json
+yarn.lock
+node_modules/
+
+# Configs
+tokens.json
+config.json

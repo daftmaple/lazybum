@@ -1,0 +1,20 @@
+{
+  "clientId": "insert client id here",
+  "clientSecret": "insert client secret here",
+  "allowedUsers": ["list of allowed users"],
+  "channel": "bot's channel",
+  "prefix": "$",
+  "gameMap": {
+    "sot": "Sea of Thieves",
+    "csgo": "Counter-Strike: Global Offensive",
+    "pubg": "PLAYERUNKNOWN'S BATTLEGROUNDS",
+    "rl": "Rocket League",
+    "lol": "League of Legends",
+    "chat": "Just Chatting",
+    "eft": "Escape From Tarkov",
+    "tarkov": "Escape From Tarkov",
+    "mc": "Minecraft",
+    "siege": "Tom Clancy's Rainbow Six Siege",
+    "r6": "Tom Clancy's Rainbow Six Siege"
+  }
+}
