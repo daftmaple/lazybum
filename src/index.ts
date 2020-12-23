@@ -58,55 +58,63 @@ chatClient.onConnect(() => {
   console.log('Bot has been connected');
 });
 
+type CommandArguments = {
+  client: ChatClient;
+  channel: string;
+  args: string[];
+  user: string;
+};
+
+type CommandHandler = (arg: CommandArguments) => void;
+
 chatClient.onMessage((channel, user, message, msg) => {
   if (
     channel.replace('#', '') === botChannel &&
     message.startsWith(botPrefix)
   ) {
+    const args: string[] = message.trim().split(' ');
+    const cmd = args[0].replace(botPrefix, '');
+
     // Ensure that the command is invoked in the channel
-    if (botAllowedUsers.indexOf(user) !== -1) {
-      // User is in the allowed users list
-      const args: string[] = message.trim().split(' ');
-      const cmd = args[0].replace(botPrefix, '');
-      const response = commandHandler(cmd, [...args.slice(1)]);
-      if (response) {
-        chatClient.say(channel, response);
-      }
-    } else {
-      chatClient.say(
+    const commands: Record<string, CommandHandler> = {
+      g: setGame,
+      w: weirdChamp,
+    };
+
+    if (commands[cmd]) {
+      commands[cmd]({
+        client: chatClient,
         channel,
-        'You are not allowed to use this command. Whisper me for access.'
-      );
+        args,
+        user,
+      });
     }
   }
 });
 
-type CommandHandler = (args: string[]) => string | null;
-
-function commandHandler(cmd: string, args: string[]): string | null {
-  const commands: Record<string, CommandHandler> = {
-    g: setGame,
-    w: weirdChamp,
-  };
-
-  if (commands[cmd]) {
-    return commands[cmd](args);
+function setGame({ client, channel, args, user }: CommandArguments) {
+  if (botAllowedUsers.indexOf(user) === -1) {
+    client.say(
+      channel,
+      'You are not allowed to use this command. Whisper me for access.'
+    );
+    return;
   }
 
-  return null;
-}
-
-function setGame(game: string[]): string | null {
-  if (game.length < 1) return null;
-
-  const parsedGame = botGames[game[0]];
-  if (parsedGame) {
-    return `!game ${parsedGame}`;
+  if (args.length < 1) {
+    client.say(channel, 'Game is needed');
+    return;
   }
 
-  return null;
+  const parsedGame = botGames[args[0]];
+  if (!parsedGame) {
+    client.say(channel, 'Game is not found');
+    return;
+  }
+
+  client.say(channel, `!game ${parsedGame}`);
 }
 
-function weirdChamp(): string {
-  return 'WeirdChamp';
+function weirdChamp({ client, channel, user }: CommandArguments) {
+  client.say(channel, `WeirdChamp @${user}`);
 }
