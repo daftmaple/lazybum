@@ -139,7 +139,7 @@ function weirdChamp({ client, channel, args, user }: CommandArguments) {
 }
 
 function packageVersion({ client, channel }: CommandArguments) {
-  client.say(channel, `Version ${version}`);
+  client.say(channel, `Version ${botVersion}`);
 }
 
 function checkIfSongIsRequested({
