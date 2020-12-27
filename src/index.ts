@@ -8,6 +8,8 @@ import {
 import { ChatClient } from 'twitch-chat-client';
 
 const clientConfig = JSON.parse(fs.readFileSync('./config.json', 'utf-8'));
+const version: string = JSON.parse(fs.readFileSync('./package.json', 'utf-8'))
+  .version;
 
 const clientId: string = clientConfig.clientId;
 const clientSecret: string = clientConfig.clientSecret;
@@ -79,13 +81,14 @@ chatClient.onMessage((channel, user, message, msg) => {
     const commands: Record<string, CommandHandler> = {
       g: setGame,
       w: weirdChamp,
+      v: packageVersion,
     };
 
     if (commands[cmd]) {
       commands[cmd]({
         client: chatClient,
         channel,
-        args: [...args.slice(1)],
+        args: [cmd, ...args.slice(1)],
         user,
       });
     }
@@ -101,12 +104,12 @@ function setGame({ client, channel, args, user }: CommandArguments) {
     return;
   }
 
-  if (args.length < 1) {
+  if (args.length < 2) {
     client.say(channel, 'Game is needed');
     return;
   }
 
-  const parsedGame = botGames[args[0]];
+  const parsedGame = botGames[args[1]];
   if (!parsedGame) {
     client.say(channel, 'Game is not found');
     return;
@@ -115,6 +118,14 @@ function setGame({ client, channel, args, user }: CommandArguments) {
   client.say(channel, `!game ${parsedGame}`);
 }
 
-function weirdChamp({ client, channel, user }: CommandArguments) {
-  client.say(channel, `WeirdChamp @${user}`);
+function weirdChamp({ client, channel, args, user }: CommandArguments) {
+  if (args.length > 1) {
+    client.say(channel, `WeirdChamp ${args[1]}`);
+  } else {
+    client.say(channel, `WeirdChamp ${user}`);
+  }
+}
+
+function packageVersion({ client, channel }: CommandArguments) {
+  client.say(channel, `Version ${version}`);
 }

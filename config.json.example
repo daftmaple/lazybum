@@ -15,6 +15,12 @@
     "tarkov": "Escape From Tarkov",
     "mc": "Minecraft",
     "siege": "Tom Clancy's Rainbow Six Siege",
-    "r6": "Tom Clancy's Rainbow Six Siege"
+    "r6": "Tom Clancy's Rainbow Six Siege",
+    "halo": "Halo: The Master Chief Collection",
+    "skribbl": "skribbl.io",
+    "bo": "Call of Duty: Black Ops Cold War",
+    "warzone": "Call of Duty: Warzone",
+    "code": "Science & Technology",
+    "apex": "Apex Legends"
   }
 }
