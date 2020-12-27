@@ -6,10 +6,12 @@ import {
   StaticAuthProvider,
 } from 'twitch-auth';
 import { ChatClient } from 'twitch-chat-client';
+import { TwitchPrivateMessage } from 'twitch-chat-client/lib/StandardCommands/TwitchPrivateMessage';
 
 const clientConfig = JSON.parse(fs.readFileSync('./config.json', 'utf-8'));
-const version: string = JSON.parse(fs.readFileSync('./package.json', 'utf-8'))
-  .version;
+const botVersion: string = JSON.parse(
+  fs.readFileSync('./package.json', 'utf-8')
+).version;
 
 const clientId: string = clientConfig.clientId;
 const clientSecret: string = clientConfig.clientSecret;
@@ -17,6 +19,7 @@ const botChannel: string = clientConfig.channel;
 const botAllowedUsers: string[] = clientConfig.allowedUsers;
 const botPrefix: string = clientConfig.prefix;
 const botGames: Record<string, string> = clientConfig.gameMap;
+const botName: string = clientConfig.botName;
 
 if (!clientId || !clientSecret) {
   console.error('CLIENT_ID or CLIENT_SECRET is undefined');
@@ -57,26 +60,38 @@ const chatClient = new ChatClient(authProvider, { channels: [botChannel] });
 
 chatClient.connect();
 chatClient.onConnect(() => {
-  console.log('Bot has been connected');
+  console.log(`Bot has been connected`);
+  console.log(`Bot username: ${botName}`);
+  console.log(`Bot version: ${botVersion}`);
 });
 
 type CommandArguments = {
   client: ChatClient;
   channel: string;
   args: string[];
+  message: string;
   user: string;
+  msg: TwitchPrivateMessage;
 };
 
 type CommandHandler = (arg: CommandArguments) => void;
 
 chatClient.onMessage((channel, user, message, msg) => {
+  const args: string[] = message.trim().split(' ');
+  const cmd = args[0].replace(botPrefix, '');
+  const params = {
+    client: chatClient,
+    channel,
+    args: [cmd, ...args.slice(1)],
+    message,
+    user,
+    msg,
+  };
+
   if (
     channel.replace('#', '') === botChannel &&
     message.startsWith(botPrefix)
   ) {
-    const args: string[] = message.trim().split(' ');
-    const cmd = args[0].replace(botPrefix, '');
-
     // Ensure that the command is invoked in the channel
     const commands: Record<string, CommandHandler> = {
       g: setGame,
@@ -85,13 +100,10 @@ chatClient.onMessage((channel, user, message, msg) => {
     };
 
     if (commands[cmd]) {
-      commands[cmd]({
-        client: chatClient,
-        channel,
-        args: [cmd, ...args.slice(1)],
-        user,
-      });
+      commands[cmd](params);
     }
+  } else {
+    checkIfSongIsRequested(params);
   }
 });
 
@@ -128,4 +140,14 @@ function weirdChamp({ client, channel, args, user }: CommandArguments) {
 
 function packageVersion({ client, channel }: CommandArguments) {
   client.say(channel, `Version ${version}`);
+}
+
+function checkIfSongIsRequested({
+  client,
+  channel,
+  message,
+}: CommandArguments) {
+  if (message.match(/song.*\?/)) {
+    client.say(channel, `!song`);
+  }
 }

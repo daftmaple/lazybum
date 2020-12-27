@@ -2,6 +2,7 @@
   "clientId": "insert client id here",
   "clientSecret": "insert client secret here",
   "allowedUsers": ["list of allowed users"],
+  "botName": "bot's name",
   "channel": "bot's channel",
   "prefix": "$",
   "gameMap": {
