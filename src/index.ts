@@ -13,6 +13,8 @@ const botVersion: string = JSON.parse(
   fs.readFileSync('./package.json', 'utf-8')
 ).version;
 
+type UserType = 'broadcaster' | 'mod' | 'vip' | 'sub';
+
 const clientId: string = clientConfig.clientId;
 const clientSecret: string = clientConfig.clientSecret;
 const botChannel: string = clientConfig.channel;
@@ -20,6 +22,7 @@ const botAllowedUsers: string[] = clientConfig.allowedUsers;
 const botPrefix: string = clientConfig.prefix;
 const botGames: Record<string, string> = clientConfig.gameMap;
 const botName: string = clientConfig.botName;
+const permitW: Record<UserType, boolean> = clientConfig.permitW;
 
 if (!clientId || !clientSecret) {
   console.error('CLIENT_ID or CLIENT_SECRET is undefined');
@@ -130,8 +133,13 @@ function setGame({ client, channel, args, user }: CommandArguments) {
   client.say(channel, `!game ${parsedGame}`);
 }
 
-function weirdChamp({ client, channel, args, user }: CommandArguments) {
-  if (args.length > 1) {
+function weirdChamp({ client, channel, args, user, msg }: CommandArguments) {
+  const isAllowed =
+    (msg.userInfo.isBroadcaster && permitW.broadcaster) ||
+    (msg.userInfo.isMod && permitW.mod) ||
+    (msg.userInfo.isVip && permitW.vip) ||
+    (msg.userInfo.isSubscriber && permitW.sub);
+  if (args.length > 1 && isAllowed) {
     client.say(channel, `WeirdChamp ${args[1]}`);
   } else {
     client.say(channel, `WeirdChamp ${user}`);

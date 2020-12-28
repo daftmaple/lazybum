@@ -23,5 +23,11 @@
     "warzone": "Call of Duty: Warzone",
     "code": "Science & Technology",
     "apex": "Apex Legends"
+  },
+  "permitW": {
+    "broadcaster": true,
+    "mod": true,
+    "vip": true,
+    "sub": false
   }
 }
