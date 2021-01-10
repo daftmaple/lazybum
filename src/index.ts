@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 
 import {
   AccessToken,
@@ -8,9 +9,11 @@ import {
 import { ChatClient } from 'twitch-chat-client';
 import { TwitchPrivateMessage } from 'twitch-chat-client/lib/StandardCommands/TwitchPrivateMessage';
 
-const clientConfig = JSON.parse(fs.readFileSync('./config.json', 'utf-8'));
+const clientConfig = JSON.parse(
+  fs.readFileSync(path.join(process.cwd(), '.config', 'config.json'), 'utf-8')
+);
 const botVersion: string = JSON.parse(
-  fs.readFileSync('./package.json', 'utf-8')
+  fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8')
 ).version;
 
 type UserType = 'broadcaster' | 'mod' | 'vip' | 'sub';
@@ -29,7 +32,9 @@ if (!clientId || !clientSecret) {
   process.exit(1);
 }
 
-const tokenData = JSON.parse(fs.readFileSync('./tokens.json', 'utf-8'));
+const tokenData = JSON.parse(
+  fs.readFileSync(path.join(process.cwd(), '.config', 'tokens.json'), 'utf-8')
+);
 
 const authProvider = new RefreshableAuthProvider(
   new StaticAuthProvider(clientId, tokenData.accessToken),
@@ -51,7 +56,7 @@ const authProvider = new RefreshableAuthProvider(
         expiryTimestamp: expiryDate === null ? null : expiryDate.getTime(),
       };
       fs.writeFileSync(
-        './tokens.json',
+        path.join(process.cwd(), '.config', 'tokens.json'),
         JSON.stringify(newTokenData, null, 4),
         'utf-8'
       );

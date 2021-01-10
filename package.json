@@ -1,6 +1,6 @@
 {
   "name": "lazybum",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "build/index.js",
   "license": "None",
   "private": true,
