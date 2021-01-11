@@ -45,7 +45,7 @@ Configuration file and tokens are shipped inside the container
 
 ```sh
 docker build -t lazybum .
-docker run --detach  --name lazybum-container -v <PATH_TO_CONFIG_DIR>:/usr/src/build/.config lazybum
+docker run --detach  --name lazybum-container -v <PATH_TO_CONFIG_DIR>:/usr/src/.config lazybum
 ```
 
 Path to config directory is `$PWD/config` for Unix. Reminder that running WSL1 docker cli with Windows docker daemon [needs special treatment for volume mounting](https://stackoverflow.com/questions/60088530/wsl1-docker-desktop-volume-mounts-are-always-empty):

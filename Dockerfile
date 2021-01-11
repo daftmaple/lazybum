@@ -4,7 +4,7 @@ FROM node:14
 # App directory
 WORKDIR /usr/src
 COPY package.json .
-RUN npm install
+RUN npm install --only=prod
 
 # Copy all and build ts files
 COPY . .
