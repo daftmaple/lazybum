@@ -160,7 +160,7 @@ function checkIfSongIsRequested({
   channel,
   message,
 }: CommandArguments) {
-  if (message.match(/song.*\?/)) {
+  if (message.toLowerCase().match(/song.*\?/)) {
     client.say(channel, `!song`);
   }
 }
